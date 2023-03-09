@@ -18,6 +18,9 @@ import { CreateAddressDto } from 'src/address/dto/create-address.dto';
 import { UpdateAddressDto } from 'src/address/dto/update-address.dto';
 import { Address } from 'src/address/schemas/address.schema';
 import { ValidateObjectId } from 'src/common/pipes/validate-object-id.pipe';
+import { CreateSubscriptionDto } from 'src/subscription/dto/create-subscription.dto';
+import { Subscription } from 'src/subscription/schemas/subscription.schema';
+import { SubscriptionService } from 'src/subscription/subscription.service';
 import { AuthService } from '../auth/auth.service';
 import { LoginDto } from '../auth/dto/login.dto';
 import { SignUpDto } from '../auth/dto/signup.dto';
@@ -31,6 +34,7 @@ export class UserController {
     private readonly userService: UserService,
     private readonly addressService: AddressService,
     private readonly authService: AuthService,
+    private readonly subscriptionService: SubscriptionService,
   ) {}
 
   // user routes
@@ -70,6 +74,20 @@ export class UserController {
       user,
       changePhoneNumberDto.newPhoneNumber,
     );
+  }
+
+  // subscription routes
+  @Post('/create-subscription')
+  @UseGuards(AuthGuard('jwt'))
+  async createSubscription(
+    @Body(new ValidationPipe()) createSubscriptionDto: CreateSubscriptionDto,
+    @Request() user,
+  ): Promise<Subscription> {
+    const created = await this.subscriptionService.createSubscription(
+      createSubscriptionDto,
+      user,
+    );
+    return created;
   }
 
   // address routes
