@@ -6,62 +6,65 @@ import { UpdateAddressDto } from './dto/update-address.dto';
 import { Address } from './schemas/address.schema';
 
 @Injectable()
-export class AddressService {
+export class UserAddressService {
   constructor(
     @InjectModel('Address') private readonly addressModel: Model<Address>,
   ) {}
 
-  async create(createAddressDto: CreateAddressDto, user): Promise<Address> {
-    // create createAddressDto.owner and push it to user.user.addresses
-    const payload = { ...createAddressDto, owner: user.user._id };
+  async createAddress(
+    createAddressDto: CreateAddressDto,
+    userObject,
+  ): Promise<Address> {
+    // create createAddressDto.owner and push it to userObject.addresses
+    const payload = { ...createAddressDto, owner: userObject.user._id };
     // create address
-    const createdAddress = new this.addressModel(payload, user);
+    const createdAddress = new this.addressModel(payload, userObject);
     const address = await createdAddress.save();
 
-    // push address to user.user.addresses
-    user.user.addresses.push(address._id);
-    await user.user.save();
+    // push address to userObject.addresses
+    userObject.user.addresses.push(address._id);
+    await userObject.user.save();
 
     return address;
   }
 
-  async findAll(user): Promise<Address[]> {
-    return user.user.addresses;
+  async findAllAddresses(userObject): Promise<Address[]> {
+    return userObject.user.addresses;
   }
 
-  async findById(id: string): Promise<Address> {
+  async findAddressById(id: string): Promise<Address> {
     return this.addressModel.findById(id).exec();
   }
 
-  async update(
+  async updateAddress(
     id: string,
     updateAddressDto: UpdateAddressDto,
-    user,
+    userObject,
   ): Promise<Address> {
-    // create a new address with the updateAddressDto and push it to user.user.addresses also delete old address
-    const payload = { ...updateAddressDto, owner: user.user._id };
-    const createdAddress = new this.addressModel(payload, user);
+    // create a new address with the updateAddressDto and push it to userObject.addresses also delete old address
+    const payload = { ...updateAddressDto, owner: userObject.user._id };
+    const createdAddress = new this.addressModel(payload, userObject);
     const address = await createdAddress.save();
 
-    // find address index in user.user.addresses
-    const addressIndex = user.user.addresses.findIndex(
+    // find address index in userObject.addresses
+    const addressIndex = userObject.user.addresses.findIndex(
       (address) => address._id.toString() === id,
     );
 
-    // replace address in user.user.addresses
-    user.user.addresses.splice(addressIndex, 1, address._id);
-    await user.user.save();
+    // replace address in userObject.addresses
+    userObject.user.addresses.splice(addressIndex, 1, address._id);
+    await userObject.user.save();
 
     return address;
   }
 
-  async delete(user, id: string): Promise<object> {
-    // pop address from user.user.addresses
-    const addressIndex = user.user.addresses.findIndex(
+  async deleteAddress(userObject, id: string): Promise<object> {
+    // pop address from userObject.addresses
+    const addressIndex = userObject.user.addresses.findIndex(
       (address) => address._id.toString() === id,
     );
-    user.user.addresses.splice(addressIndex, 1);
-    await user.user.save();
+    userObject.user.addresses.splice(addressIndex, 1);
+    await userObject.user.save();
 
     return {
       message: 'Address deleted successfully',
