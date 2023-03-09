@@ -15,12 +15,12 @@ export class AuthController {
 
   @Post('/signup')
   @UsePipes(ValidationPipe)
-  signUp(@Body() signUpDto: SignUpDto): Promise<{ token: string }> {
+  async signUp(@Body() signUpDto: SignUpDto): Promise<{ token: string }> {
     return this.authService.signUp(signUpDto);
   }
 
   @Post('/login')
-  login(@Body() loginDto: LoginDto): Promise<{ token: string }> {
+  async login(@Body() loginDto: LoginDto): Promise<{ token: string }> {
     return this.authService.login(loginDto);
   }
 }

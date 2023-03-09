@@ -1,6 +1,7 @@
-import { Schema, Document } from 'mongoose';
+import { Document, Schema } from 'mongoose';
 
 export interface Address extends Document {
+  owner: Schema.Types.ObjectId;
   country: string;
   city: string;
   district: string;
@@ -16,6 +17,7 @@ export interface Address extends Document {
 
 export const AddressSchema = new Schema<Address>(
   {
+    owner: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     country: { type: String, required: true },
     city: { type: String, required: true },
     district: { type: String, required: true },
