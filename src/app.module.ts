@@ -1,23 +1,24 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AddressModule } from './address/address.module';
-import { UserModule } from './user/user.module';
-import { SubscriptionModule } from './subscription/subscription.module';
+import { DbModule } from './database/database.module';
 import { OrderModule } from './order/order.module';
 import { SchedulerModule } from './scheduler/scheduler.module';
-import { MongooseModule } from '@nestjs/mongoose';
+import { SubscriptionModule } from './subscription/subscription.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      'mongodb+srv://no7offical:hGDJNiXa502EKE5g@cluster0.lfyhitc.mongodb.net/?retryWrites=true&w=majority',
-    ),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
     SubscriptionModule,
     UserModule,
-    AddressModule,
     OrderModule,
     SchedulerModule,
+    DbModule,
   ],
   controllers: [AppController],
   providers: [AppService],

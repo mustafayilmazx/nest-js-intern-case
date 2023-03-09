@@ -8,19 +8,24 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Request,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { AddressService } from './address.service';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
 import { Address } from './schemas/address.schema';
 
-@Controller('address')
+@Controller('user/address')
 export class AddressController {
   constructor(private readonly addressService: AddressService) {}
 
   @Get()
-  async getAllAddresses(): Promise<Address[]> {
+  @UseGuards(AuthGuard('jwt'))
+  async getAllAddresses(@Request() req): Promise<Address[]> {
+    console.log(req.user);
     return this.addressService.findAll();
   }
 
