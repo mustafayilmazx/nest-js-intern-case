@@ -1,4 +1,4 @@
-import { Schema, Document } from 'mongoose';
+import { Document, Schema } from 'mongoose';
 
 export interface User extends Document {
   name: string;
@@ -9,6 +9,7 @@ export interface User extends Document {
   // add subscriptions id array
   subscriptions: Schema.Types.ObjectId[];
   addresses: Schema.Types.ObjectId[];
+  orders: Schema.Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -23,6 +24,7 @@ export const UserSchema = new Schema<User>(
     // add subscriptions id array
     subscriptions: [{ type: Schema.Types.ObjectId, ref: 'Subscription' }],
     addresses: [{ type: Schema.Types.ObjectId, ref: 'Address' }],
+    orders: [{ type: Schema.Types.ObjectId, ref: 'Order' }],
   },
   { timestamps: true },
 );

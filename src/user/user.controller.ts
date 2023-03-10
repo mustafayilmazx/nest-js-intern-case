@@ -83,6 +83,13 @@ export class UserController {
 
   // Subscription routes
 
+  // Handles GET requests to /user/subscriptions and returns all subscriptions associated with the user's account
+  @Get('/subscriptions')
+  @UseGuards(AuthGuard('jwt'))
+  async getAllSubscriptions(@Request() user): Promise<Subscription[]> {
+    return this.subscriptionService.findAllSubscriptions(user.user);
+  }
+
   // Handles POST requests to /user/create-subscription and creates a new subscription for the user
   @Post('/create-subscription')
   @UseGuards(AuthGuard('jwt'))
@@ -92,9 +99,20 @@ export class UserController {
   ): Promise<Subscription> {
     const created = await this.subscriptionService.createSubscription(
       createSubscriptionDto,
-      user,
+      user.user,
     );
     return created;
+  }
+
+  // Handles DELETE requests to /user/delete-subscription/:id and deletes the subscription with the specified ID
+  @Delete('/cancel-subscription/:id')
+  @UseGuards(AuthGuard('jwt'))
+  async deleteSubscription(
+    @Param('id', ValidateObjectId) id: string,
+    @Request() user,
+  ): Promise<{ message: string }> {
+    await this.subscriptionService.cancelSubscription(user.user, id);
+    return { message: 'Subscription cancelled' };
   }
 
   // Address routes

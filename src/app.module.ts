@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DbModule } from './database/database.module';
-import { OrderModule } from './order/order.module';
 import { SchedulerModule } from './scheduler/scheduler.module';
-import { SubscriptionModule } from './subscription/subscription.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -14,9 +13,8 @@ import { UserModule } from './user/user.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    SubscriptionModule,
     UserModule,
-    OrderModule,
+    ScheduleModule.forRoot(),
     SchedulerModule,
     DbModule,
   ],

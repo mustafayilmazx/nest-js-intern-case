@@ -29,6 +29,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       .findById(id)
       .populate('addresses')
       .populate('subscriptions')
+      .populate('orders')
       .exec();
 
     // If no user is found, throw an UnauthorizedException
