@@ -37,8 +37,8 @@ export class SubscriptionService {
     currentUser,
   ): Promise<Subscription> {
     // Calculate subscription end date as one month after the start date
-    // const subStartDate = new Date(createSubscriptionDto.subStartDate);
-    // await this.checkDate(subStartDate);
+    const subStartDate = new Date(createSubscriptionDto.subStartDate);
+    await this.checkDate(subStartDate);
 
     // Check if the user has the given address
     await this.checkHasAddress(currentUser, createSubscriptionDto.subAddress);
