@@ -15,7 +15,7 @@ export class SchedulerService {
   ) {}
 
   // This function is called every minute
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_HOUR)
   async handleCron() {
     const logger = new Logger(SchedulerService.name);
     logger.log('Cron job running');
